@@ -7,8 +7,7 @@ of the optimal policy. Pseudocode in page 101 of the book "Reinforcement
 Learning: an Instroduction", 2nd edition, by Richard S. Sutton and Andrew G.
 Barto. A few adaptations have been made in order to make it more efficient.
 """
-def run(policy, initial_v, n_states, n_actions, max_episodes, env, gamma,
-        epsilon):
+def run(policy, n_states, n_actions, max_episodes, env, gamma, epsilon):
     sum_rewards_per_state_action = np.zeros((n_states, n_actions))
     rewards_counters_per_state_action = np.full((n_states, n_actions),
                                                 0.000000001)
@@ -49,4 +48,4 @@ n_states = env.observation_space.n
 n_actions = env.action_space.n
 # Using a random policy
 policy = np.full((n_states, n_actions), 1 / n_actions)
-print(run(policy, 0, n_states, n_actions, 10000, env, 0.99, 0.2))
+print(run(policy, n_states, n_actions, 10000, env, 0.99, 0.2))
