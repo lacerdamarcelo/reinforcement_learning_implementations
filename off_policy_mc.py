@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
 import gym
+import time
 import numpy as np
+from tqdm import tqdm
 """
 Implementation of the algorithm off-policy Monte Carlo control for estimation
 of the optimal policy. Pseudocode in page 111 of the book "Reinforcement
@@ -13,7 +16,7 @@ def run(n_states, n_actions, max_episodes, env, gamma, epsilon):
     pi_policy = np.zeros(n_states)
     for state in range(n_states):
         pi_policy[state] = np.argmax(q[state])
-    for episode in range(max_episodes):
+    for episode in tqdm(range(max_episodes)):
         b_policy = np.full((n_states, n_actions), epsilon / n_actions)
         for state in range(n_states):
             b_policy[state][np.argmax(q[state])] =  1 - epsilon + epsilon / n_actions
@@ -37,8 +40,8 @@ def run(n_states, n_actions, max_episodes, env, gamma, epsilon):
             q[states[n_step]][actions[n_step]] += (W / c[states[n_step]][actions[n_step]]) * (G - q[states[n_step]][actions[n_step]])
             pi_policy[states[n_step]] = np.argmax(q[states[n_step]])
             # WHY IS THAT??
-            if actions[n_step] != pi_policy[states[n_step]]:
-                break
+            #if actions[n_step] != pi_policy[states[n_step]]:
+            #    break
             W = W * (1 / b_policy[states[n_step]][actions[n_step]])
     print(q)
     return pi_policy
@@ -46,4 +49,5 @@ def run(n_states, n_actions, max_episodes, env, gamma, epsilon):
 env = gym.make('NChain-v0')
 n_states = env.observation_space.n
 n_actions = env.action_space.n
-print(run(n_states, n_actions, 100, env, 0.99, 0.3))
+policy = run(n_states, n_actions, 100, env, 0.99, 0.5)
+print(policy)

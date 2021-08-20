@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import gym
 import numpy as np
+from tqdm import tqdm
 """
 Implementation of the algorithm first-visit Monte Carlo control for estimation
 of the optimal policy. Pseudocode in page 101 of the book "Reinforcement
@@ -11,7 +12,7 @@ def run(policy, n_states, n_actions, max_episodes, env, gamma, epsilon):
     sum_rewards_per_state_action = np.zeros((n_states, n_actions))
     rewards_counters_per_state_action = np.full((n_states, n_actions),
                                                 0.000000001)
-    for episode in range(max_episodes):
+    for episode in tqdm(range(max_episodes)):
         terminal = False
         state = env.reset()
         states = [state]

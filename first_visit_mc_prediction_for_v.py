@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import gym
 import numpy as np
+from tqdm import tqdm
 """
 Implementation of the algorithm first-visit Monte Carlo for estimation of V.
 Pseudocode in page 92 of the book "Reinforcement Learning: an Instroduction",
@@ -10,7 +11,7 @@ been made in order to make it more efficient.
 def estimate_v(policy, initial_v, n_states, max_episodes, env, gamma):
     sum_rewards_per_state = np.zeros(n_states)
     rewards_counters_per_state = np.full(n_states, 0.000000000001)
-    for episode in range(max_episodes):
+    for episode in tqdm(range(max_episodes)):
         terminal = False
         state = env.reset()
         states = [state]
