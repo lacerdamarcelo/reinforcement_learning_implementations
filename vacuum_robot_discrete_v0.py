@@ -1,17 +1,31 @@
+import os
 import numpy as np
 import pandas as pd
 
 class DiscreteVaccumRobotV0:
     
-    def __init__(self, room_file):
-        self.room_data = pd.read_csv(room_file, header=None).astype(float)
+    def __init__(self, room_file, max_moves):
+        self.room_file = room_file
+        self.max_moves = max_moves
+
+    def reset(self):
+        self.room_data = pd.read_csv(self.room_file, header=None).astype(float)
         self.room_data = self.room_data.values
+        self.room_data_shape = self.room_data.shape
         not_visited_slots = np.where(self.room_data == 1)
         initial_pos_index = np.random.randint(0, len(not_visited_slots[0]))
         self.position = [not_visited_slots[0][initial_pos_index],
                          not_visited_slots[1][initial_pos_index]]
         self.rotation = np.random.choice([0, 90, 180, 270])
         self.room_data[self.position[0]][self.position[1]] = -0.1
+        self.current_move = 0
+        return [self.position[0], self.position[1], self.rotation, False]
+
+    def render(self):
+        rendered_room_data = self.room_data.copy()
+        rendered_room_data[self.position[0]][self.position[1]] = 3
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(rendered_room_data)
         
     def step(self, action):
         # Move forward
@@ -41,10 +55,12 @@ class DiscreteVaccumRobotV0:
             elif self.rotation == 360:
                 self.rotation = 0
             found_obstacle = False
+        self.current_move += 1
         return [[self.position[0], self.position[1], self.rotation,
-                 found_obstacle], reward, (self.room_data == 1).any() == False,
+                 found_obstacle], reward, (self.room_data == 1).any() == False or self.current_move == self.max_moves,
                 {}]
     
-        
-robot_env = DiscreteVaccumRobotV0('room1.csv')
-print(robot_env.room_data)
+
+if __name__ == '__main__':
+    robot_env = DiscreteVaccumRobotV0('room1.csv', 100)
+    print(robot_env.room_data)
