@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 
@@ -19,6 +20,12 @@ class DiscreteVaccumRobotV0:
         self.room_data[self.position[0]][self.position[1]] = -0.1
         self.current_move = 0
         return [self.position[0], self.position[1], self.rotation, False]
+
+    def render(self):
+        rendered_room_data = self.room_data.copy()
+        rendered_room_data[self.position[0]][self.position[1]] = 3
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(rendered_room_data)
         
     def step(self, action):
         # Move forward
